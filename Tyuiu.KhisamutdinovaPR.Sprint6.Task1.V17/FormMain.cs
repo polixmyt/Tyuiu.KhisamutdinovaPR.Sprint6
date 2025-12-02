@@ -16,5 +16,13 @@ namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task1.V17
         {
             InitializeComponent();
         }
+
+        // 🔽 ДОБАВЬ вот это
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // здесь будет твой код, что делать при нажатии кнопки
+        }
+
+        // остальные методы формы...
     }
 }
