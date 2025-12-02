@@ -3,7 +3,7 @@
 namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task0.V1.Test
 {
     [TestClass]
-    public sealed class DataServiceTest
+    public sealed class DataServiceTest 
     {
         [TestMethod]
         public void TestMethod1()
