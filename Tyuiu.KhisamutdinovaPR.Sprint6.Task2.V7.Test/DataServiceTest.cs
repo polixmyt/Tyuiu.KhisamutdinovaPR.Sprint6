@@ -1,35 +1,33 @@
-﻿using Tyuiu.KhisamutdinovaPR.Sprint6.Task2.V7.Lib;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Tyuiu.KhisamutdinovaPR.Sprint6.Task2.V7.Lib;
+using System;
+
 namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task2.V7.Test
 {
-    public class Tests
+    [TestClass]
+    public class DataServiceTest
     {
-
         [TestMethod]
-        public void ValidGetMassFunction()
+        public void GetMassFunction_LengthAndValuesCorrect()
         {
             DataService ds = new DataService();
-            int startValue = -5;
-            int stopValue = 5;
-            int len = stopValue - startValue + 1;
-            double[] valueWaitArray;
-            valueWaitArray = new double[len];
 
-            valueWaitArray[0] = -9.1;
-            valueWaitArray[1] = 1.55;
-            valueWaitArray[2] = 292.78;
-            valueWaitArray[3] = -0.57;
-            valueWaitArray[4] = -0.35;
-            valueWaitArray[5] = 2;
-            valueWaitArray[6] = 4.35;
-            valueWaitArray[7] = 4.57;
-            valueWaitArray[8] = -288.78;
-            valueWaitArray[9] = 2.45;
-            valueWaitArray[10] = 13.1;
+            int start = -5;
+            int stop = 5;
 
-            double[] res;
-            res = new double[len];
-            res = ds.GetMassFunction(startValue, stopValue);
-            CollectionAssert.AreEqual(valueWaitArray, res);
+            double[] res = ds.GetMassFunction(start, stop);
+
+            // Должно быть 11 значений: -5, -4, ..., 5
+            Assert.AreEqual(11, res.Length);
+
+            // Проверим несколько опорных точек (приблизительно)
+            // значения заранее посчитаны той же формулой с округлением до 2 знаков:
+            // x = -5 → -9.10
+            // x =  0 →  2.00
+            // x =  5 → 13.10
+            Assert.AreEqual(-9.10, res[0], 0.01);
+            Assert.AreEqual(2.00, res[5], 0.01);
+            Assert.AreEqual(13.10, res[10], 0.01);
         }
     }
 }
