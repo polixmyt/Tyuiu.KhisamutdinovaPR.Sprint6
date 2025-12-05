@@ -18,7 +18,7 @@ namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task5.V8
         {
             try
             {
-                string path = @"InPutFileTask5V8.txt";
+                string path = @"C:\DataSprint6\InPutDataFileTask5V8.txt";
 
                 var numbers = ds.LoadFromFile(path);
                 var negative = ds.GetNegative(numbers);
