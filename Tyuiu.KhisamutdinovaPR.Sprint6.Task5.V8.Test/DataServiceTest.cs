@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.IO;
 using Tyuiu.KhisamutdinovaPR.Sprint6.Task5.V8.Lib;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task5.V8.Test
 {
@@ -9,20 +9,34 @@ namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task5.V8.Test
     public class DataServiceTest
     {
         [TestMethod]
-        public void TestNegativeNumbers()
+        public void LoadFromDataFile_ReturnsOnlyNegativeValues()
         {
+            // arrange
             DataService ds = new DataService();
 
-            List<double> values = new List<double>()
+            // создаём временный файл с тестовыми данными
+            string tempPath = Path.GetTempFileName();
+            // 2.5 -3.3 10 -6 8.2
+            File.WriteAllText(tempPath, "2.5 -3.3 10 -6 8.2");
+
+            try
             {
-                2.5, -3.3, 10, -6, 8.2
-            };
+                // act
+                double[] result = ds.LoadFromDataFile(tempPath);
 
-            List<double> result = ds.GetNegative(values);
-
-            Assert.AreEqual(2, result.Count);
-            Assert.IsTrue(result.Contains(-3.3));
-            Assert.IsTrue(result.Contains(-6));
+                // assert
+                Assert.AreEqual(2, result.Length);
+                Assert.AreEqual(-3.3, result[0], 0.001);
+                Assert.AreEqual(-6.0, result[1], 0.001);
+            }
+            finally
+            {
+                // удаляем временный файл
+                if (File.Exists(tempPath))
+                {
+                    File.Delete(tempPath);
+                }
+            }
         }
     }
 }
