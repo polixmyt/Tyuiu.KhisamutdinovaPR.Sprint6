@@ -9,33 +9,32 @@ namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task5.V8.Test
     public class DataServiceTest
     {
         [TestMethod]
-        public void LoadFromDataFile_ReturnsOnlyNegativeValues()
+        public void LoadFromDataFile_ParseAllNumbersCorrectly()
         {
-            // arrange
             DataService ds = new DataService();
 
-            // создаём временный файл с тестовыми данными
+            // создаём временный файл с несколькими числами
             string tempPath = Path.GetTempFileName();
-            // 2.5 -3.3 10 -6 8.2
-            File.WriteAllText(tempPath, "2.5 -3.3 10 -6 8.2");
+            // здесь специально и с точкой, и с запятой:
+            File.WriteAllText(tempPath, " -13  -19  9,82  -9.71  -0,11  -17,36  -12  -12,35 ");
 
             try
             {
-                // act
-                double[] result = ds.LoadFromDataFile(tempPath);
+                double[] res = ds.LoadFromDataFile(tempPath);
 
-                // assert
-                Assert.AreEqual(2, result.Length);
-                Assert.AreEqual(-3.3, result[0], 0.001);
-                Assert.AreEqual(-6.0, result[1], 0.001);
+                Assert.AreEqual(8, res.Length);
+
+                double[] expected = { -13.0, -19.0, 9.82, -9.71, -0.11, -17.36, -12.0, -12.35 };
+
+                for (int i = 0; i < expected.Length; i++)
+                {
+                    Assert.AreEqual(expected[i], res[i], 0.001, $"Index {i} mismatch");
+                }
             }
             finally
             {
-                // удаляем временный файл
                 if (File.Exists(tempPath))
-                {
                     File.Delete(tempPath);
-                }
             }
         }
     }
