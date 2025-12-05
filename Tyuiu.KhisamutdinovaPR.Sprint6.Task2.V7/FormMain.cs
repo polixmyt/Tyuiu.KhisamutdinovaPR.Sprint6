@@ -13,7 +13,7 @@ namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task2.V7
         {
             InitializeComponent();
 
-            
+
             dataGridViewFunction.ColumnCount = 2;
             dataGridViewFunction.Columns[0].HeaderText = "X";
             dataGridViewFunction.Columns[1].HeaderText = "F(x)";

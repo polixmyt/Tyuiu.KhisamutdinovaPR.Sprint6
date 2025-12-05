@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E86F977D-4C04-4994-A676-1C67484F0129}</ProjectGuid>
+    <ProjectGuid>{E6D31E27-7C96-49DD-9B6C-A8CC49B052EF}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Tyuiu.KhisamutdinovaPR.Sprint6.Task2.V7</RootNamespace>
     <AssemblyName>Tyuiu.KhisamutdinovaPR.Sprint6.Task2.V7</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -52,12 +52,8 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormMain1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FormMain.resx">
-      <DependentUpon>FormMain.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -82,7 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Tyuiu.KhisamutdinovaPR.Sprint6.Task2.V7.Lib\Tyuiu.KhisamutdinovaPR.Sprint6.Task2.V7.Lib.csproj">
-      <Project>{43147b26-d2ba-4fe7-945b-44de053022f8}</Project>
+      <Project>{19db29ea-a7a6-43b2-9620-91373f724fb4}</Project>
       <Name>Tyuiu.KhisamutdinovaPR.Sprint6.Task2.V7.Lib</Name>
     </ProjectReference>
   </ItemGroup>
