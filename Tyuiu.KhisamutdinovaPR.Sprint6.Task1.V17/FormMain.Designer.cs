@@ -1,6 +1,6 @@
 ﻿namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task1.V17
 {
-    partial class FormMain
+    partial class Form1
     {
         /// <summary>
         /// Required designer variable.
