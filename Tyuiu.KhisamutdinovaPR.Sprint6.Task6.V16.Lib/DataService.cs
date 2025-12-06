@@ -7,7 +7,6 @@ namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task6.V16.Lib
 {
     public class DataService : ISprint6Task6V16
     {
-        // Читаем файл и возвращаем слова, в которых есть латинская буква b/B
         public string CollectTextFromFile(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -18,7 +17,6 @@ namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task6.V16.Lib
 
             string text = File.ReadAllText(path);
 
-            // Разделители слов
             char[] separators = new char[]
             {
                 ' ', '\t', '\r', '\n',
@@ -28,12 +26,11 @@ namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task6.V16.Lib
             string[] words = text
                 .Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
-            // Берём только слова, в которых встречается латинская b/B
+            // ВАЖНО: берём только слова, где есть ИМЕННО строчная 'b'
             var filtered = words
-                .Where(w => w.IndexOf('b', StringComparison.OrdinalIgnoreCase) >= 0)
+                .Where(w => w.Contains('b'))   // без ignore-case
                 .ToArray();
 
-            // Склеиваем через пробел
             string result = string.Join(" ", filtered);
 
             return result;
