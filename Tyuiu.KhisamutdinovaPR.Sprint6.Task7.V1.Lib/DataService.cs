@@ -1,17 +1,51 @@
 ﻿// Author: Хисамутдинова Полина
 // Project: Tyuiu.KhisamutdinovaPR.Sprint6.Task7.V1
-// Description: Работа с матрицей из CSV-файла. Замена
-//              отрицательных значений во втором столбце на 1.
+// Description: Чтение матрицы из CSV и замена отрицательных
+//              значений во втором столбце на 1.
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using tyuiu.cources.programming.interfaces.Sprint6;
 
 namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task7.V1.Lib
 {
-    public class DataService
+    public class DataService : ISprint6Task7V1
     {
+        // ==== МЕТОД ИНТЕРФЕЙСА, КОТОРЫЙ ВЫЗЫВАЕТ ПОРТАЛ ====
+        public int[,] GetMatrix(string path)
+        {
+            // 1) читаем матрицу из CSV
+            int[,] source = LoadFromCsv(path);
+
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            int rows = source.GetLength(0);
+            int cols = source.GetLength(1);
+
+            int[,] result = new int[rows, cols];
+
+            // 2) копируем, во 2-м столбце (<0) заменяем на 1
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    if (j == 1 && source[i, j] < 0)   // второй столбец (индекс 1)
+                    {
+                        result[i, j] = 1;
+                    }
+                    else
+                    {
+                        result[i, j] = source[i, j];
+                    }
+                }
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Чтение матрицы целых чисел из CSV-файла.
         /// Разделители: ; , пробел, таб.
@@ -67,38 +101,6 @@ namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task7.V1.Lib
             }
 
             return matrix;
-        }
-
-        /// <summary>
-        /// Заменяет во втором столбце все отрицательные значения на 1.
-        /// Возвращает новую матрицу.
-        /// </summary>
-        public int[,] ReplaceNegativeInSecondColumnWithOne(int[,] matrix)
-        {
-            if (matrix == null)
-                throw new ArgumentNullException(nameof(matrix));
-
-            int rows = matrix.GetLength(0);
-            int cols = matrix.GetLength(1);
-
-            int[,] result = new int[rows, cols];
-
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < cols; j++)
-                {
-                    if (j == 1 && matrix[i, j] < 0) // второй столбец (индекс 1)
-                    {
-                        result[i, j] = 1;
-                    }
-                    else
-                    {
-                        result[i, j] = matrix[i, j];
-                    }
-                }
-            }
-
-            return result;
         }
 
         /// <summary>

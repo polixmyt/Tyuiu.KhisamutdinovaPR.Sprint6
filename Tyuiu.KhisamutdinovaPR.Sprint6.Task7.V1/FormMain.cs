@@ -1,9 +1,4 @@
-﻿// Author: Хисамутдинова Полина
-// Project: Tyuiu.KhisamutdinovaPR.Sprint6.Task7.V1
-// Description: Загрузка матрицы из CSV, изменение,
-//              вывод в два DataGridView и сохранение результата.
-
-using System;
+﻿using System;
 using System.Windows.Forms;
 using Tyuiu.KhisamutdinovaPR.Sprint6.Task7.V1.Lib;
 
@@ -11,15 +6,15 @@ namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task7.V1
 {
     public partial class FormMain : Form
     {
-        private readonly DataService ds = new DataService();
-        private int[,] matrixIn;
-        private int[,] matrixOut;
+        DataService ds = new DataService();
+
+        int[,] matrixIn;
+        int[,] matrixOut;
 
         public FormMain()
         {
             InitializeComponent();
 
-            // Немного настроим DataGridView (можно сделать и в Designer)
             dataGridViewIn.ReadOnly = true;
             dataGridViewIn.AllowUserToAddRows = false;
 
@@ -27,82 +22,48 @@ namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task7.V1
             dataGridViewOut.AllowUserToAddRows = false;
         }
 
-        // Кнопка "Загрузить"
         private void buttonOpen_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
-                ofd.Title = "Выберите файл InPutFileTask7V1.csv";
                 ofd.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    try
-                    {
-                        string path = ofd.FileName;
+                    string path = ofd.FileName;
 
-                        matrixIn = ds.LoadFromCsv(path);
-                        matrixOut = ds.ReplaceNegativeInSecondColumnWithOne(matrixIn);
+                    // исходная матрица
+                    matrixIn = ds.LoadFromCsv(path);
+                    // обработанная матрица (по интерфейсу)
+                    matrixOut = ds.GetMatrix(path);
 
-                        ShowMatrix(matrixIn, dataGridViewIn);
-                        ShowMatrix(matrixOut, dataGridViewOut);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(
-                            "Ошибка при чтении файла:\n" + ex.Message,
-                            "Ошибка",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
-                    }
+                    ShowMatrix(matrixIn, dataGridViewIn);
+                    ShowMatrix(matrixOut, dataGridViewOut);
                 }
             }
         }
 
-        // Кнопка "Сохранить"
         private void buttonSave_Click(object sender, EventArgs e)
         {
             if (matrixOut == null || matrixOut.Length == 0)
             {
-                MessageBox.Show("Нет данных для сохранения. Сначала загрузите файл.",
-                    "Предупреждение",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                MessageBox.Show("Нет данных для сохранения");
                 return;
             }
 
             using (SaveFileDialog sfd = new SaveFileDialog())
             {
-                sfd.Title = "Сохранить результат";
-                sfd.FileName = "OutPutFileTask7.csv";
+                sfd.FileName = "OutPutFileTask7V1.csv";
                 sfd.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
 
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    try
-                    {
-                        ds.SaveToCsv(sfd.FileName, matrixOut);
-
-                        MessageBox.Show("Файл успешно сохранён.",
-                            "Готово",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(
-                            "Ошибка при сохранении файла:\n" + ex.Message,
-                            "Ошибка",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
-                    }
+                    ds.SaveToCsv(sfd.FileName, matrixOut);
+                    MessageBox.Show("Файл сохранён");
                 }
             }
         }
 
-        /// <summary>
-        /// Вывод матрицы в DataGridView.
-        /// </summary>
         private void ShowMatrix(int[,] matrix, DataGridView grid)
         {
             grid.Columns.Clear();
