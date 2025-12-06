@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using Tyuiu.KhisamutdinovaPR.Sprint6.Task5.V8.Lib;
 
 namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task5.V8
@@ -12,42 +15,70 @@ namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task5.V8
         public FormMain()
         {
             InitializeComponent();
+
+            // Настройка таблиц
+            dataGridViewValues.ColumnCount = 1;
+            dataGridViewValues.Columns[0].HeaderText = "Все значения";
+
+            dataGridViewNegative.ColumnCount = 1;
+            dataGridViewNegative.Columns[0].HeaderText = "Меньше 0";
+
+            // Настройка диаграммы
+            chartNegative.Series.Clear();
+            var series = new Series("Отрицательные");
+            series.ChartType = SeriesChartType.Column;
+            chartNegative.Series.Add(series);
+            chartNegative.ChartAreas[0].AxisX.Title = "№";
+            chartNegative.ChartAreas[0].AxisY.Title = "Значение";
         }
 
         private void buttonLoad_Click(object sender, EventArgs e)
         {
             try
             {
-                string path = @"C:\DataSprint6\InPutDataFileTask5V8.txt";
+                // путь к входному файлу (подправь при необходимости)
+                string path = @"InPutDataFileTask5V8.txt";
 
-                var numbers = ds.LoadFromFile(path);
-                var negative = ds.GetNegative(numbers);
-
-                // Очистка DataGridView
-                dataGridViewInput.Rows.Clear();
-                dataGridViewInput.Columns.Clear();
-                dataGridViewInput.Columns.Add("col1", "Значение");
-
-                // Вывод всех чисел
-                foreach (double n in numbers)
+                if (!File.Exists(path))
                 {
-                    dataGridViewInput.Rows.Add(Math.Round(n, 3));
+                    MessageBox.Show($"Файл не найден:\n{path}");
+                    return;
                 }
 
-                // Вывод отрицательных чисел в TextBox
-                textBoxOutput.Text = "";
-                foreach (double n in negative)
+                // 1. Читаем все числа из файла для вывода в DataGridView
+                string text = File.ReadAllText(path);
+                string[] parts = text.Split(
+                    new[] { ' ', '\t', '\r', '\n' },
+                    StringSplitOptions.RemoveEmptyEntries);
+
+                double[] allValues = parts
+                    .Select(p => double.Parse(
+                        p.Replace(',', '.'),
+                        CultureInfo.InvariantCulture))
+                    .ToArray();
+
+                // 2. Получаем отрицательные числа через библиотеку
+                double[] negativeValues = ds.LoadFromDataFile(path);
+
+                // 3. Выводим все числа
+                dataGridViewValues.Rows.Clear();
+                foreach (double v in allValues)
                 {
-                    textBoxOutput.AppendText(Math.Round(n, 3) + Environment.NewLine);
+                    dataGridViewValues.Rows.Add(Math.Round(v, 3));
                 }
 
-                // Заполнение графика
-                chartValues.Series[0].Points.Clear();
-                int index = 1;
-                foreach (var n in negative)
+                // 4. Выводим отрицательные числа
+                dataGridViewNegative.Rows.Clear();
+                foreach (double v in negativeValues)
                 {
-                    chartValues.Series[0].Points.AddXY(index, n);
-                    index++;
+                    dataGridViewNegative.Rows.Add(v); // уже округлены в библиотеке
+                }
+
+                // 5. Строим диаграмму по отрицательным
+                chartNegative.Series[0].Points.Clear();
+                for (int i = 0; i < negativeValues.Length; i++)
+                {
+                    chartNegative.Series[0].Points.AddXY(i + 1, negativeValues[i]);
                 }
             }
             catch (Exception ex)

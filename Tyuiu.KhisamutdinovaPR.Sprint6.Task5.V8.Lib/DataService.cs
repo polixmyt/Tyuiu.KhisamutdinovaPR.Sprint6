@@ -1,7 +1,4 @@
-﻿// Author: Хисамутдинова Полина
-// Project: Tyuiu.KhisamutdinovaPR.Sprint6.Task5.V8.Lib
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -11,8 +8,12 @@ namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task5.V8.Lib
 {
     public class DataService : ISprint6Task5V8
     {
-        // Читает ВСЕ числа из файла и возвращает их в виде массива double,
-        // округлённых до 3 знаков после запятой.
+        /// <summary>
+        /// Читает числа из файла и возвращает массив ТОЛЬКО отрицательных значений,
+        /// округлённых до трёх знаков после запятой.
+        /// </summary>
+        /// <param name="path">Полный путь к входному файлу</param>
+        /// <returns>Массив отрицательных чисел</returns>
         public double[] LoadFromDataFile(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -23,28 +24,34 @@ namespace Tyuiu.KhisamutdinovaPR.Sprint6.Task5.V8.Lib
 
             string text = File.ReadAllText(path);
 
+            // Разделители — пробел, таб, перевод строки и т.п.
             string[] parts = text.Split(
                 new[] { ' ', '\t', '\r', '\n' },
                 StringSplitOptions.RemoveEmptyEntries);
 
-            List<double> values = new List<double>();
+            List<double> negatives = new List<double>();
 
             foreach (string part in parts)
             {
-                // Меняем запятую на точку, чтобы работали оба варианта записи
+                // Нормализуем разделитель: и точка, и запятая будут работать
                 string normalized = part.Replace(',', '.');
 
-                if (double.TryParse(normalized,
-                                    NumberStyles.Float,
-                                    CultureInfo.InvariantCulture,
-                                    out double value))
+                if (double.TryParse(
+                        normalized,
+                        NumberStyles.Float,
+                        CultureInfo.InvariantCulture,
+                        out double value))
                 {
-                    value = Math.Round(value, 3); // по условию – до трёх знаков
-                    values.Add(value);
+                    if (value < 0)
+                    {
+                        // Округление до трёх знаков после запятой по условию задачи
+                        value = Math.Round(value, 3);
+                        negatives.Add(value);
+                    }
                 }
             }
 
-            return values.ToArray();
+            return negatives.ToArray();
         }
     }
 }
